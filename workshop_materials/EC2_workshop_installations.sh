@@ -6,7 +6,7 @@
 sudo apt-get update
 
 # Install wget curl samtools autoconf zlib1g-dev libbz2-dev liblzma-dev build-essential unzip mafft
-sudo apt-get install -y samtools autoconf zlib1g-dev libbz2-dev liblzma-dev build-essential mafft unzip
+sudo apt-get install -y samtools autoconf zlib1g-dev libbz2-dev liblzma-dev build-essential mafft unzip default-jre python
 
 # Install HTSlib
 wget https://github.com/samtools/htslib/releases/download/1.14/htslib-1.14.tar.bz2
