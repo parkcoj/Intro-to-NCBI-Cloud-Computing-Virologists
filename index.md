@@ -213,9 +213,12 @@ echo "export PATH=$PATH:$PWD/hisat2-2.2.1:$PWD/sratoolkit.2.11.2-ubuntu64/bin" >
 vdb-config -i
 ```
 
-The page that opens is an interactive graphic display where we can customize the settings necessary for SRA toolkit to run. For today we only need to change one setting...
+The page that opens is an interactive graphic display where we can customize the settings necessary for SRA toolkit to run. For today we only need to change one setting, so here are the buttons to hit to do that.
 
-Hit `A` to change to the AWS tab, then hit `R` to enable reporting of your cloud identity (telling NCBI that you sent the command from an AWS computer). Then hit `S` and `X` to save and close.
+- `A` to change to the AWS tab
+- `R` to enable reporting of your cloud identity (telling NCBI that you sent the command from an AWS computer)
+- `S` to save the changes
+- `X` to close the interactive browser
 
 ## Generating a Consensus Sequence for a Viral Genome
 
@@ -242,7 +245,7 @@ chmod +x SRA_to_consensus.sh
 nohup ./SRA_to_consensus.sh SRR15943386
 ```
 
-We use the `nohup` command on this script also, because it can take up to 1 hour to run! So we will let this program do its thing for a bit while we go do some other exercises. So let's navigate back to our AWS console tab and move on to some other work.
+We use the `nohup` command on this script also, because it can take up to 1 hour to run! So we will let this program do its thing for a bit while we go do some other exercises. Let's navigate back to our AWS console tab and move on to some other work.
 
 ---
 
@@ -402,119 +405,57 @@ aws s3 ls s3://<username>-cloud-workshop
 
 ![img57](doc_images/img57.jpg){:width="40%"}
 
-# Objective 4 - Visualize Read Alignments Using Genome Data Viewer
+# Objective 4 - Visualize Sequence Alignments Using Sequence Viewer
 
 ## Importing Our Data
 
-1)	Open a new tab in your web browser and go to [https://ncbi.nlm.nih.gov/genome/gdv/](https://ncbi.nlm.nih.gov/genome/gdv/)
+4.1)	Open a new tab in your web browser and go to [https://www.ncbi.nlm.nih.gov/projects/sviewer/](https://www.ncbi.nlm.nih.gov/projects/sviewer/)
 
-2)	Make sure the **Human** is selected from the tree on the left
+4.2)	Click **enter an accession or gi** to choose the reference sequence. We aligned our sequence against the NCBI RefSeq record NC_045512, so enter the accession **NC_045512** into the box provided and click **OK**
 
 ![img63](doc_images/img63.jpg){:width="60%"}
 
-3)	Scroll to the bottom of the page and click on the 7th Chromosome image to load the Genome Data Viewer on the human reference genome’s 7th chromosome
+The Sequence Viewer page comes pre-loaded with several tracks aligned against the chromosome. Most of these are not useful to us today, so let's configure the page to be a bit easier to read.
 
-![img64](doc_images/img64.jpg){:width="60%"}
-
-4)	The GDV page comes pre-loaded with several tracks aligned against the chromosome. Most of these are not useful to us today, so we can use the red X buttons in the top right corner of each track to delete them. Do this for every track **except the top one**. This top track shows every gene and its position on the chromosome.
+4.3) Click the **Tracks** button in the top-right corner of the viewer page and select **Configure Tracks**
 
 ![img65](doc_images/img65.jpg){:width="60%"}
 
-> There are LOTS of NCBI-offered tracks you can upload ato compare against your own data. To learn more about them click the little gear at the bottom of the viewer page:  
-> ![img66](doc_images/img66.jpg)
+4.4) Deselect all of the tracks on this page **except Sequence & Genes** to remove those tracks from the Sequence Viewer panel.
 
-5) Now we can add our own tracks to the viewer. Click on **User Data and Track Hubs** on the left side of the screen
+![xx]()
 
-![img67](doc_images/img67.jpg){:height="5%" width="60%"}
+4.5) Click **Configure** at the bottom to save the changes.
 
-6) Click the **Options** pulldown menu and click **Add Remote Files...** 
+![xx]()
 
-![img68](doc_images/img68.jpg){:width="60%"}
+4.6) To add our own data track, open the **Configure Tracks** menu again and select the **Custom Data** tab at the top of the pop-up menu
 
-7)	Navigate back to your S3 bucket tab and click on the **SRR6314034.sorted.bam** file to open up the details for the file
+![xx]()
 
-![img70](doc_images/img70.jpg){:width="=80%"}
+4.7) We did a sequence alignment, so let's choose the **Alignment MUSCLE/FASTA** Data Source as our type of data to upload.
 
-8) On the new page, click the "Copy" button next to the **Object URL** to copy the URL path to the file to your clipboard
+![xx]()
 
-![img71](doc_images/img71.jpg){:width="80%"}
+4.8) Next, find the file we downloaded from our S3 bucket and drag-and-drop it onto the upload box. You can also use the Browse button if that is more convenient for you. You should also provide a name for the track so it is easy to identify in the Sequence Viewer. Here I use **SRR15943386 Alignment**. Click **Upload** to add the track to the Sequence Viewer
 
-9) Go back to your GDV tab and paste the link into the URL box. Next, add a familiar name like `Child` to the **Name** box to help us identify the track later. Then click **Add**
+![xx]()
 
-![img72](doc_images/img72.jpg){:width="60%"}
+4.9) Click **Configure** to see the track on your Sequence Viewer
 
-10) This track is showing all of the results of magicBLAST in a “pile-up” view. This is basically one long histogram plot where a taller bar represents a region of the chromosome where more reads from the sample aligned to. Because our sequences are specific to a single gene in the chromosome, but our current view is showing the entire chromosome, the pile-up view may look a little bland.  
-Try to find the region of the chromosome that our reads aligned to:
+![xx]()
 
-![img73](doc_images/img73.jpg)
+> **NOTE:** When the track is first uploaded you may see a long red bar. This is a graphical bug. It will resolve itself as we continue with the exercise
 
-11)	Use the scale bar at the top of the viewer and click-and-drag across the section where our reads aligned to highlight it. Then use the pop-up menu to click **Zoom On Range**
+4.10) The mutation we are looking for is found in the S protein. Click-and-drag your mouse across the coordinate plot at the top of the Sequence Viewer to outline the region of the genome where the S protein is located (it does not have to be exact). Select **Zoom on Range** from the pop-up menu to refocus the viewer on that highlighted region.
 
-![img74](doc_images/img74.jpg){:height="50%" width="60%"}
+![xx]()
 
-12)	Repeat step 14 using the new view to refine the range again if the view didn’t change very much.
+The alignment track shows each point of variation between the RefSeq Sars-CoV-2 sequence and our own sequence. Below are a few of the common variations:
+- Horizontal red bar -or- Vertical blue bar: A gap in the alignment
+- Vertical red bar: The nucleotide at that position differs from the reference
 
-![img75](doc_images/img75.jpg){:height="50%" width="60%"}
-
-13)	Your view should now see the track similar to the screenshot below. If you don’t see the mess of red lines below the thick black bar, that’s okay! We will turn it off next anyway.
-
-![img76](doc_images/img76.jpg){:width="60%"}
-
-> **NOTE:** The tracks may be slightly different depending on how you have zoomed in. As long as you can see the image above somewhere on your screen you are doing great!
-
-14) Those red lines underneath the thick black box are showing how each individual sequence read aligned to the reference sequence. This particular view isn’t very helpful to us, so let’s turn it off.
-
-> **NOTE:** If you can’t see these lines, that’s great! You can skip Steps 15 & 16
-
-15) Click the little gear in the top right corner of our Child track to open its settings.
-
-![img77](doc_images/img77.jpg)
-
-16)	On this new menu page, change the “Alignment Display” to “Packed” and then click **Accept**. You can change many other settings here as well, but I’ll leave that up to you to explore outside of this workshop.
-
-![img78](doc_images/img78.jpg){:width="60%"}
-
-Now that we can see the range a bit better, let’s break down what each of these colors represent in the pile-up view:
-
-- **Grey** – This is the standard “bar” for the pile-up view. The taller this bar is in a particular region, the greater the coverage is from the mapped reads.
-- **Red** – These are locations in the genome where reads mapped, but with mismatches in the nucleotide sequence compared to the reference sequence.
-- **Black** – These are gaps that exist in the read alignment to the reference genome (i.e., the reads only have a nucleotide sequence that covers before/after the large black chunk).
-
-If you want to explore the pile-up view a bit more, try using the buttons in the toolbar just above the numeric range to navigate the assembly. Hold your mouse over the button for a description of what they can do!
-
-## Adding NCBI Data
-
-1)	Click the **Tracks** button in the bottom right corner of the viewer panel to open the Configure Page
-
-![img79](doc_images/img79.jpg)
-
-2) Click on the **Variation** tab and scroll way WAY down to the **dbVar** category. Then click the checkbox next to **dbVar Pathogenic Clinical Structural Variants** then click **Configure** in the bottom right corner of the page.
-
-![img80](doc_images/img80.jpg){:width="60%"}
-
-3) You should now have a new structural variants track loaded into the viewer. This track shows the region of the genome where each variant is found. Blue variants are caused by an insertion in this region, while Red variants are caused by a deletion. Because our alignment suggests a deletion, we want to focus on the red variants.
-
-![img81](doc_images/img81.jpg){:height="70%" width="60%"}
-
-4) Next, zoom in on the right-half of our aligned region in the child track like the screenshot below. We want to look closely at the BBS9 gene to find structural variants that overlap with this region.
-
-![img82](doc_images/img82.jpg){:width="60%"}
-
-5)	Obviously, there are a LOT of variants that overlap in this region. However, our concern is only about our sequenced region of the gene. Variants which extend beyond our sequenced region are less likely to be relevant for us. So rather than just aimlessly checking every red variant, lets look only for variants that start or stop within our deletion.
- 
-Oh... there’s just one? Let's check that one then.
-
-![img83](doc_images/img83.jpg){:width="60%"}
-
-6)	Mouse over the variant **nsv1398255** to get a new pop-up menu and select the dbVar link at the bottom of it
-
-![img84](doc_images/img84.jpg){:width="60%"}
-
-7) On the dbVar page, navigate to the **Clinical Assertions** panel to see which clinical conditions have been associated with this deletion
-
-![img85](doc_images/img85.jpg)
-
-8) Just as we suspected! This region is associated with Bardet-biedl syndrome. If we wanted to, we could click on the phenotype and explore more about the condition. But that is something you need to explore on your own, because this is the end of the worksheet!
+4.11) <Stuff about finding the right mutation in the alignment>
 
 ---
 
