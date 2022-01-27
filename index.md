@@ -21,10 +21,11 @@ In this online, interactive workshop you will learn how to:
 
 ![img2](doc_images/img2.jpg){:width="60%"}
 
-
 3) Click **Sign-In** under the AWS Console Sign-In column on the new page
 
 ![img3](doc_images/img3.jpg)
+
+> **NOTE:** If you are prompted to explore the "New AWS Console Home", click **Switch to the new Console Home**, we want the latest and greatest!
 
 4) If you see **AWS Management Console** like the screenshot below, you have successfully logged in to the AWS Console!
 
@@ -57,17 +58,11 @@ For this workshop, use the format `<username>-cloud-workshop` where `<username>`
 
 ![img7](doc_images/img7.jpg){:width="60%"}
 
-4) Scroll down to the **Block Public Access settings for this bucket** section. Deselect the blue checkbox at the top and select the bottom 2 checkboxes. Then check the box underneath the warning symbol to acknowledge your changes to the public access settings
-
->**NOTE:** We turn on Public Access so that we can upload our files from the bucket directly to public websites like NCBI (*e.g.*, we will be uploading result files from our bucket to the Genome Data Viewer later today). By default, you should keep your bucket from Public Access unless you explicitly need it
-
-![img8](doc_images/img8.jpg){:width="60%"}
-
-5) Ignore the rest of the settings and scroll to the bottom of the page. Click the orange **Create Bucket** button.
+4) Ignore the rest of the settings and scroll to the bottom of the page. Click the orange **Create Bucket** button.
 
 ![img9](doc_images/img9.jpg){:width="80%"}
 
-6) Clicking the button will redirect you back to the main S3 page. You should be able to find your new bucket in the list. If so, you have successfully created an S3 bucket!
+5) Clicking the button will redirect you back to the main S3 page. You should be able to find your new bucket in the list. If so, you have successfully created an S3 bucket!
 
 ![img10](doc_images/img10.jpg){:width="80%"}
 
@@ -75,9 +70,9 @@ Now that we have an S3 bucket ready, we can go see what the Athena page looks li
 
 ---
 
-# Objective 1 - Aligning Sequence Reads using AWS EC2 & MagicBLAST
+# Objective 1 - Aligning SRA Reads and Generating Consensus Sequences Using AWS EC2
 
-One of the most common uses of the cloud is simply renting some computer space from the cloud provider to run some code and generate data. Today, we'll setup an EC2 instance and import our code & data into the rented computer from the internet.
+One of the most common uses of the cloud is simply renting some computer space from the cloud provider to run some code and generate data. Today, we'll setup an EC2 instance to  generate and align a viral consensus sequence with it.
 
 ## Launching an EC2 Instance
 
@@ -259,7 +254,7 @@ We use the `nohup` command on this script also, because it can take up to 1 hour
 
 &nbsp;
 
-2) Visiting the Athena page should prompt you with one notification about the "new Athena console experience". You can just click the "X" to remove it.
+2) If you are prompted to visit the new Athena console experience, do it. We want to use the latest and greatest!
 
 &nbsp;
 
@@ -343,27 +338,32 @@ WHERE sra_study = 'SRP125431'
 
 ---
 
-# Objective 3 - Collect Consensus Sequence & Alignments
+# Objective 3 - Collect Consensus Sequence & Alignment
 
-3.1) Let's navigate back to the EC2 instance we made in Objective 1 and see our progress. If you kept your original EC2 instance tab open, you can simply refresh the tab to reconnect to it.
+3.1) Let's navigate back to the EC2 instance we made in Objective 1 and see our progress. If you kept your original EC2 instance tab open, you can simply refresh the tab to reconnect to it, otherwise you can reconnect using the Instances table on the EC2 console page
 
-![xx]()
+![imgv1](doc_images/imgv1.jpg){:width="60%"}
 
-3.2) To know if the script has finished, we need to check two things.
+To know if the script has finished, we need to check two things.
  - The script has completed running
  - The file we need is available (sequence_alignment.aln)
 
-The script itself is designed to tell us when it is complete. In the log file `nohup.out` there should be a line that says "The script is done running! I hope this worked!". We can look for this line to check if the script is complete. So run the following command to pull the last line from the log file and see if it's done:
+The script itself is designed to tell us when it is complete. In the log file `nohup.out` there should be a line that says "The script is done running! I hope this worked!". We can look for this line to check if the script is complete. 
+
+3.2) Run the following command to pull the last line from the log file and see if our program completed:
 
 {% include codeHeader.html %}
 ```bash
 tail -n 1 nohup.out
 ```
-To see if the file we want is created, type `ls -a` to get a list of files on the EC2 instance. Look through that list for `sequence_alignment.aln` to know if we got the final file we want.
 
-![xx]()
+![imgv2](doc_images/imgv2.jpg){:width="60%"}
 
-If the file is present, then our work is done! Next we need to move those results to our S3 bucket so we can access the data outside of our EC2 instance. Run the following AWS CLI command to copy the files to your S3 bucket.
+3.3) Next, to see if our alignment file was created, type `ls -l` to get a list of files on the EC2 instance. Look through that list for `sequence_alignment.aln` to know if we got the final file we want (the screenshot below is truncated, you will have more files)
+
+![imgv3](doc_images/imgv3.jpg){:width="60%"}
+
+If the file is present, then our work is done! We just need to move those results to our S3 bucket so we can access the data outside of our EC2 instance. Run the following AWS CLI command to copy the files to your S3 bucket.
 
 > **REMEMBER:** You will need to replace the `<username>` piece of the command with your own login username to make it match your S3 bucket name. So copy/paste the command into your terminal, then use the arrow keys to move your cursor back through the string and change the name to your own bucket.
 
@@ -372,22 +372,13 @@ If the file is present, then our work is done! Next we need to move those result
 aws s3 cp sequence_alignment.aln s3://<username>-cloud-workshop
 ```
 
-3.3) To prove that we successfully moved the file to our s3 bucket we can run one final command (remember to change the `<username>` portion again here):
-
-{% include codeHeader.html %}
-```bash
-aws s3 ls s3://<username>-cloud-workshop
-```
-
 3.4)	We should now be done with our remote computer (aka: EC2 instance). Go ahead and close the browser tab your instance is open in.
-
-![img50B](doc_images/img50B.jpg){:width="60%"}
 
 3.5)	In the console webpage, click the blue **Instances** button at the top of the instance launcher page
 
 ![img51](doc_images/img51.jpg){:width="60%"}
 
-3.6) We don’t want to leave an instance on while not using it, because it costs money to keep it active. So, let’s shut it down, but not delete it, just in case we want to use it later. Check the box next to your instance _(top image)_ then click the **Instance State** drop-down menu and select **Stop Instance** _(bottom image)_.
+3.6) We don’t want to leave an instance on while not using it, because it costs money to keep it running. So, let’s shut it down, but not delete it, just in case we want to use it later. Check the box next to your instance _(top image)_ then click the **Instance State** drop-down menu and select **Stop Instance** _(bottom image)_.
 
 ![img52](doc_images/img52.jpg){:width="70%"}
 
@@ -402,8 +393,6 @@ aws s3 ls s3://<username>-cloud-workshop
 3.8) You should see the file in your S3 bucket. Simply click on the checkbox next to the filename and select `Download` from the list of options at the top of the page
 
 ![img56](doc_images/img56.jpg){:width="60%"}
-
-![img57](doc_images/img57.jpg){:width="40%"}
 
 # Objective 4 - Visualize Sequence Alignments Using Sequence Viewer
 
@@ -423,33 +412,23 @@ The Sequence Viewer page comes pre-loaded with several tracks aligned against th
 
 4.4) Deselect all of the tracks on this page **except Sequence & Genes** to remove those tracks from the Sequence Viewer panel.
 
-![xx]()
+![imgv4](doc_images/imgv4.jpg){:width="60%"}
 
-4.5) Click **Configure** at the bottom to save the changes.
+4.5) While we're at it, lets add our own data track, select the **Custom Data** tab at the top of the pop-up menu. We created a sequence alignment so select the **Alignment MUSCLE/FASTA** Data Source from the menu on the left of the new page.
 
-![xx]()
+![imgv5](doc_images/imgv5.jpg){:width="60%"}
 
-4.6) To add our own data track, open the **Configure Tracks** menu again and select the **Custom Data** tab at the top of the pop-up menu
+4.6) Next, find the file we downloaded from our S3 bucket and drag-and-drop it onto the upload box. You can also use the Browse button if that is more convenient for you. You should also provide a name for the track so it is easy to identify in the Sequence Viewer. Here I use **SRR15943386 Alignment**. Click **Upload** to add the track to the Sequence Viewer
 
-![xx]()
+![imgv6](doc_images/imgv6.jpg){:width="60%"}
 
-4.7) We did a sequence alignment, so let's choose the **Alignment MUSCLE/FASTA** Data Source as our type of data to upload.
-
-![xx]()
-
-4.8) Next, find the file we downloaded from our S3 bucket and drag-and-drop it onto the upload box. You can also use the Browse button if that is more convenient for you. You should also provide a name for the track so it is easy to identify in the Sequence Viewer. Here I use **SRR15943386 Alignment**. Click **Upload** to add the track to the Sequence Viewer
-
-![xx]()
-
-4.9) Click **Configure** to see the track on your Sequence Viewer
-
-![xx]()
+4.7) Click **Configure** to see the track on your Sequence Viewer
 
 > **NOTE:** When the track is first uploaded you may see a long red bar. This is a graphical bug. It will resolve itself as we continue with the exercise
 
-4.10) The mutation we are looking for is found in the S protein. Click-and-drag your mouse across the coordinate plot at the top of the Sequence Viewer to outline the region of the genome where the S protein is located (it does not have to be exact). Select **Zoom on Range** from the pop-up menu to refocus the viewer on that highlighted region.
+4.8) The mutation we are looking for is found in the S protein. Click-and-drag your mouse across the coordinate plot at the top of the Sequence Viewer to outline the region of the genome where the S protein is located (it does not have to be exact). Select **Zoom on Range** from the pop-up menu to refocus the viewer on that highlighted region.
 
-![xx]()
+![imgv7](doc_images/imgv7.jpg){:width="60%"}
 
 The alignment track shows each point of variation between the RefSeq Sars-CoV-2 sequence and our own sequence. Below are a few of the common variations:
 - Horizontal red bar -or- Vertical blue bar: A gap in the alignment
@@ -457,9 +436,9 @@ The alignment track shows each point of variation between the RefSeq Sars-CoV-2 
 
 We can see within the S protein that there are several points of variation as indicated by the several vertical red bars interspersed within the gray alignment bar. Our variation of interest in this protein is `N501Y` which, in plain text, means "the 501st amino acid in the S protein _was_ an Asparagine (N), but is now a Tyrosine (Y)". To convert this name into nucleotide coordinates we can do some basic math.
 
-4.11) Hover your mouse over the S protein Gene bar (the green one). Find the **location** information to note where the start/stop coordinates are for the gene within the genome.
+4.9) Hover your mouse over the S protein Gene bar (the green one). Find the **location** information to note where the start/stop coordinates are for the gene within the genome.
 
-![xx]()
+![imgv8](doc_images/imgv8.jpg){:width="60%"}
 
 If the start position of the gene is `21,563` and we want to look 500 amino acids into the protein, then the following equation should give us the correct genomic coordinate to jump to:
 
@@ -467,19 +446,19 @@ If the start position of the gene is `21,563` and we want to look 500 amino acid
 
 which gives us **23,063 bases**. Let's use this to jump to the correct position in the gene.
 
-4.12) In the search bar at the top-left of the screen type `23,063` and hit enter to quickly focus the Sequence Viewer on our desired location
+4.10) In the search bar at the top-left of the screen type `23,063` and hit enter to quickly focus the Sequence Viewer on our desired location
 
-![xx]()
+![imgv9](doc_images/imgv9.jpg){:width="60%"}
 
-4.13) Look, a mutation! We can hover over the `N` amino acid to confirm that this is indeed the 501st amino acid.
+4.11) Look, a mutation! We can hover over the `N` amino acid to confirm that this is indeed the 501st amino acid.
 
-![xx]()
+![imgv10](doc_images/imgv10.jpg){:width="60%"}
 
-4.14) Our sequence shows a codon mutation from `AAT` to `TAT`. Use the codon table below to find the new Amino Acid coded for by our sequence:
+4.12) Our sequence shows a codon mutation from `AAT` to `TAT`. Use the codon table below to find the new Amino Acid coded for by our sequence:
 
-![xx]()
+![codon_table](doc_images/codon_table.jpg){:width="60%"}
 
-4.15) It looks like we have indeed spotted a `N501Y` mutation in our sequence. Well done! We should have enough evidence to report back to our supervisor and take next steps to prepare for this new variant.
+4.13) It looks like we have indeed spotted a `N501Y` mutation in our sequence. Well done! We should have enough evidence to report back to our supervisor and take next steps to prepare for this new variant.
 
 ---
 
@@ -487,11 +466,15 @@ which gives us **23,063 bases**. Let's use this to jump to the correct position 
 
 This concludes our exercise on navigating the AWS Cloud computing console and several of its most popular cloud services. We hope that you are motivated to take these skills and tools with you and explore how they can benefit your own research. You can find links to many useful resources to help you below.
 
----
+## From Introductory to Intermediate and beyond
 
-# Useful URLs
+The examples you have done today are a very small and glimpse into how you can move your traditional research into the cloud. Unfortunately, 3 hours is hardly enough time to demonstrate the _power_ of the cloud and how it can _improve_ your workflows! So how can the cloud improve what we did today? Here are some examples that you can think about for this case study:
 
-- Case Study - [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5778042/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5778042/)
+- **AWS Batch** offers the ability to easily distribute and coordiante analyses over multiple EC2 instances. Repeating this workshop over multiple genomes can easily be managed with minimal extra compute time by letting AWS Batch manage this work
+- **AWS CLI** can manage more than just an S3 bucket like we did today. It can also customize almost any cloud tool in the AWS platform. Imagine writing a script that could do our Athena searches, build our S3 buckets, and even design our EC2 instances.
+- **AWS Lambda** provides an easy way to trigger code without _any_ managing of hardware (imagine skipping the setup of the EC2 instance). This can be useful for automating the start/stop of a piece of code in real-time. For example, our analysis pipeline could be triggered to start every time a new set of sequence read data is uploaded to our S3 bucket, making the entire process 100% automatic.
+
+## Useful URLs
 
 **AWS**
 
@@ -504,21 +487,23 @@ This concludes our exercise on navigating the AWS Cloud computing console and se
 - AWS Glue Documentation: [https://docs.aws.amazon.com/glue/](https://docs.aws.amazon.com/glue/)
 - AWS S3 Bucket Documentation: [https://docs.aws.amazon.com/s3/index.html](https://docs.aws.amazon.com/s3/index.html)
 
-**Genome Data Viewer**
+**Sequence Viewer**
 
-- Genome Data Viewer: [https://www.ncbi.nlm.nih.gov/genome/gdv/](https://www.ncbi.nlm.nih.gov/genome/gdv/)
 - Sequence Viewer Documentation: [https://www.ncbi.nlm.nih.gov/tools/sviewer/](https://www.ncbi.nlm.nih.gov/tools/sviewer/)
-
-**MagicBLAST**
-
-- MagicBLAST Documentation: [https://ncbi.github.io/magicblast/](https://ncbi.github.io/magicblast/)
-- MagicBLAST FTP page: [ftp://ftp.ncbi.nlm.nih.gov/blast/executables/magicblast/LATEST](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/magicblast/LATEST)
-- SamTools Documentation: [http://www.htslib.org/](http://www.htslib.org/)
 
 **SRA**
 
 - SRA Homepage: [https://www.ncbi.nlm.nih.gov/sra](https://www.ncbi.nlm.nih.gov/sra)
 - SRA in the Cloud: [https://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud/](https://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud/)
+- SRA Toolkit Github Page: [https://github.com/ncbi/sra-tools](https://github.com/ncbi/sra-tools)
+
+**3rd Party Tools**
+
+- Hisat2 Documentation: [http://daehwankimlab.github.io/hisat2/](http://daehwankimlab.github.io/hisat2/)
+- iVar Documentation: [https://andersen-lab.github.io/ivar/html/manualpage.html](https://andersen-lab.github.io/ivar/html/manualpage.html)
+- MAFFT Documentation: [https://mafft.cbrc.jp/alignment/software/](https://mafft.cbrc.jp/alignment/software/)
+- Samtools Documentation: [http://www.htslib.org/](http://www.htslib.org/)
+- Trimmomatic Documentation: [http://www.usadellab.org/cms/?page=trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)
 
 ---
 
