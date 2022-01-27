@@ -455,7 +455,31 @@ The alignment track shows each point of variation between the RefSeq Sars-CoV-2 
 - Horizontal red bar -or- Vertical blue bar: A gap in the alignment
 - Vertical red bar: The nucleotide at that position differs from the reference
 
-4.11) <Stuff about finding the right mutation in the alignment>
+We can see within the S protein that there are several points of variation as indicated by the several vertical red bars interspersed within the gray alignment bar. Our variation of interest in this protein is `N501Y` which, in plain text, means "the 501st amino acid in the S protein _was_ an Asparagine (N), but is now a Tyrosine (Y)". To convert this name into nucleotide coordinates we can do some basic math.
+
+4.11) Hover your mouse over the S protein Gene bar (the green one). Find the **location** information to note where the start/stop coordinates are for the gene within the genome.
+
+![xx]()
+
+If the start position of the gene is `21,563` and we want to look 500 amino acids into the protein, then the following equation should give us the correct genomic coordinate to jump to:
+
+`21563 + (500 * 3)`
+
+which gives us **23,063 bases**. Let's use this to jump to the correct position in the gene.
+
+4.12) In the search bar at the top-left of the screen type `23,063` and hit enter to quickly focus the Sequence Viewer on our desired location
+
+![xx]()
+
+4.13) Look, a mutation! We can hover over the `N` amino acid to confirm that this is indeed the 501st amino acid.
+
+![xx]()
+
+4.14) Our sequence shows a codon mutation from `AAT` to `TAT`. Use the codon table below to find the new Amino Acid coded for by our sequence:
+
+![xx]()
+
+4.15) It looks like we have indeed spotted a `N501Y` mutation in our sequence. Well done! We should have enough evidence to report back to our supervisor and take next steps to prepare for this new variant.
 
 ---
 
