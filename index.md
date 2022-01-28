@@ -13,23 +13,22 @@ In this online, interactive workshop you will learn how to:
 
 # Objective 0 - Logging in & Navigating the AWS Console Page
 
-1) Find your credential email with subject: **NCBI Codethon Credentials**
+1) Navigate to [https://codeathon.ncbi.nlm.nih.gov](https://codeathon.ncbi.nlm.nih.gov) and login using the following credentials:
 
-![img1](doc_images/img1.jpg){:width="60%"}
-
-2) Navigate to [https://codeathon.ncbi.nlm.nih.gov](https://codeathon.ncbi.nlm.nih.gov) and login using the credentials from the email *(left image)* and create a new password after logging in *(right image)*
+Username: Email prefix (everything before the `@` in your email address) For example, if your email address is example@gmail.com, then your username will be `example`
+Password: See the Workshop Zoom Chat for today's password. You will be prompted to create a new permanent password after your first login.
 
 ![img2](doc_images/img2.jpg){:width="60%"}
 
-3) Click **Sign-In** under the AWS Console Sign-In column on the new page
+2) Click **Sign-In** under the AWS Console Sign-In column on the new page
 
 ![img3](doc_images/img3.jpg)
 
 > **NOTE:** If you are prompted to explore the "New AWS Console Home", click **Switch to the new Console Home**, we want the latest and greatest!
 
-4) If you see **AWS Management Console** like the screenshot below, you have successfully logged in to the AWS Console!
+3) If you see **AWS Management Console** like the screenshot below, you have successfully logged in to the AWS Console!
 
-![img4](doc_images/img4.jpg){:width="60%"}
+![img4](doc_images/img4.jpg){:width="80%"}
 
 > **NOTE:** If you are logged out or get kicked out of the console, simply return to [https://codeathon.ncbi.nlm.nih.gov](https://codeathon.ncbi.nlm.nih.gov) and log in again (remember your newly created password!) to get back to the console home page.
 
@@ -92,11 +91,11 @@ One of the most common uses of the cloud is simply renting some computer space f
 
 1.4) On the **Step 2: Choose an Instance Type** page - use the filter menus near the top of the menu to set the Instance Family to **m6i**
 
-![img29](doc_images/img29.jpg){:width="60%"}
+![img29](doc_images/img29.jpg){:width="80%"}
 
 1.5) Look to the table below the filter buttons and check the box in the 2nd row from the top where the type is **m6i.2xlarge**
 
-![img30](doc_images/img30.jpg){:width="60%"}
+![img30](doc_images/img30.jpg){:width="80%"}
 
 1.6) Click **Next: Configure Instance Details**
 
@@ -246,6 +245,9 @@ We use the `nohup` command on this script also, because it can take up to 1 hour
 
 # Objective 2 - Search for the sequence reads deposited into NCBI's SRA database using AWS Athena
 
+> You can also use the SRA Run Selector on the NCBI website to download data from NCBI directly to your S3 bucket! Find more information and a tutorial here:  
+> [https://www.ncbi.nlm.nih.gov/sra/docs/data-delivery/](https://www.ncbi.nlm.nih.gov/sra/docs/data-delivery/)
+
 ## Navigating to Athena
 
 1) Use the search bar at the top of the console page to search for **Athena** and click on the first result
@@ -296,20 +298,15 @@ These steps aren't necessary to do before every Athena query, but they are usefu
 
 ## Querying Our Dataset
 
-1) The following link is the actual publication for our case study today. Scroll to the very bottom and find the **Data Availability** section: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5778042/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5778042/)
+Obviously we already know what accession we need for the analysis, but what else can we learn about our sequence?
 
-![img19](doc_images/img19.jpg)
-
-> You can also use the SRA Run Selector on the NCBI website to download data from NCBI directly to your S3 bucket! Find more information and a tutorial here:  
-> [https://www.ncbi.nlm.nih.gov/sra/docs/data-delivery/](https://www.ncbi.nlm.nih.gov/sra/docs/data-delivery/)
-
-2) The paper stored the data we need under and ID **SRP125431**, but we don't know exactly which column that is associated with. So, scroll through the preview table we made earlier to find a column filled with similar values.
+1) Now the accession we gave to our consensus sequence analysis was **SRR15943386**, but we don't know exactly which column that is associated with. So, scroll through the preview table we made earlier to find a column filled with similar values.
 
 ![img20](doc_images/img20.jpg){:width="60%"}
 
-> The **Preview Table** query we used to make this example pulls random lines from the table, so the values within your table may look different from this screenshot. The important info for us is that each value in this **sra_study** column starts with **"SRP" (or "ERP")**
+> The **Preview Table** query we used to make this example pulls random lines from the table, so the values within your table may look different from this screenshot. The important info for us is that each value in this **acc** column starts with **"SRR" (or "ERR" or "DRR")**
 
-3) Now that we know which column to query for our data (sra_study), we can build the Athena query. Look to the panel where we enter our Athena queries. Click **New Query 1** to navigate back to the empty panel so we can write our own query.
+3) Now that we know which column to query for our data (acc), we can build the Athena query. Look to the panel where we enter our Athena queries. Click **New Query 1** to navigate back to the empty panel so we can write our own query.
 
 ![img21](doc_images/img21.jpg){:width="60%"}
 
@@ -321,18 +318,18 @@ These steps aren't necessary to do before every Athena query, but they are usefu
 ```
 SELECT *
 FROM "sra"."metadata"
-WHERE sra_study = 'SRP125431'
+WHERE acc = 'SRR15943386'
 ```
 
-![img22](doc_images/img22.jpg){:width="40%"}
+![img22](doc_images/img22.jpg){:width="50%"}
 
-5) If you see a results table with three rows like the partial screenshot below, you have successfully found your data!
+5) If you see a results table with one row like the partial screenshot below, you have successfully found your data!
 
 ![img23](doc_images/img23.jpg){:width="80%"}
 
-6) Click the **Download results** button on the top-right corner of the results panel to download your file to your computer in CSV format. You should be able to open this in Microsoft Excel, Google Sheets, or a regular text editor (e.g., Notepad for PC, TextEdit for Mac). We will review this file later, so keep it handy.
+6) Click the **Download results** button on the top-right corner of the results panel to download your file to your computer in CSV format. You should be able to open this in Microsoft Excel, Google Sheets, or a regular text editor (e.g., Notepad for PC, TextEdit for Mac).
 
-![img24](doc_images/img24.jpg){:width="60%"}
+![img24](doc_images/img24.jpg){:width="80%"}
 
 > Want to challenge yourself? Visit the supplementary text (section: **SQL challenges**) to find some questions you can build your own SQL query for. Plus, find more advanced SQL query techniques and a deeper breakdown of the SRA metadata table too!
 
