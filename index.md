@@ -16,6 +16,7 @@ In this online, interactive workshop you will learn how to:
 1) Navigate to [https://codeathon.ncbi.nlm.nih.gov](https://codeathon.ncbi.nlm.nih.gov) and login using the following credentials:
 
 Username: Email prefix (everything before the `@` in your email address) For example, if your email address is example@gmail.com, then your username will be `example`
+
 Password: See the Workshop Zoom Chat for today's password. You will be prompted to create a new permanent password after your first login.
 
 ![img2](doc_images/img2.jpg){:width="60%"}
@@ -145,7 +146,7 @@ One of the most common uses of the cloud is simply renting some computer space f
 
 1.15)	On the pop-up menu – change the first dropdown menu to **Proceed without a key pair** and check the box below it to acknowledge the change. Finally, click **Launch Instances** in the bottom right of the popup.
 
-> **NOTE:** Key pairs are used to access this remote computer using other methods, like SSH. We won’t be using these other methods so we can skip the key pairs here without affecting our ability to do the workshop. Additionally, by disabling the key pairs we also prevent public access to the instance. (This is how we will secure our instances for the workshop)
+> **NOTE:** Key pairs are used to access an instance outside of the AWS console, like through SSH. We won’t be using these other methods so we can skip the key pairs here without affecting our ability to do the workshop. Additionally, by disabling the key pairs we also prevent external access to the instance. (This is how we will secure our instances for the workshop)
 
 ![img43](doc_images/img43.jpg){:width="60%"}
 
@@ -159,7 +160,7 @@ One of the most common uses of the cloud is simply renting some computer space f
 
 1.18)	Refresh the page occasionally until the **Status Check** column changes to **2/2 checks passed** for your instance. This means we can now log into the instance.
 
-> **NOTE:** There are several 'statuses' this column can have. 2/2 checks passed is the final status. So, if you see anything else in the **Status Check** column, the instance is not ready to go.
+> **NOTE:** There are several states this column can have. `2/2 checks passed` is the final status. So, if you see anything else in the **Status Check** column, the instance is not ready to go.
 
 ![img46](doc_images/img46.jpg)
  
@@ -175,7 +176,7 @@ One of the most common uses of the cloud is simply renting some computer space f
 
 ## Installing Software
 
-Before we can do our analyses, we need to install some software into our new remote computer. There are many programs necessary to make today's analysis work, so rather than typing all of that code out ourselves, I have prepared a script that we will download and run to install the programs for us.
+Before we can do our analyses, we need to install the required software into our the instance. There are many programs necessary to make today's exercise work. So rather than typing all of that code out ourselves I have prepared a script that we will use to install the programs for us.
 
 1.21) First we need to download the script I have written for this workshop. Click the copy button on the code block below and paste it into your terminal
 
@@ -188,12 +189,12 @@ wget https://raw.githubusercontent.com/parkcoj/Intro-to-NCBI-Cloud-Computing-Vir
 
 {% include codeHeader.html %}
 ```bash
-chmod +x EC2_workshop_installations.sh &&	nohup ./EC2_workshop_installations.sh
+chmod +x EC2_workshop_installations.sh && nohup ./EC2_workshop_installations.sh
 ```
 
 > **WARNING:** This script can take up to 15 minutes to run due to the number of programs being installed. It's likely that your connection to the computer will time-out during then and you will be forced to reconnect. DON'T WORRY! The `nohup` command we added above will ensure that the installation continues even if you get disconnected. 
 
-1.23) Now that all of our programs are installed, we need to configure the computer to access the programs with some shortcuts. The following command will create those shortcuts in our computer so it is easier to run the new programs.
+1.23) Now that all of our programs are installed we need to configure the computer to access these programs with some shortcuts. The following command will create those shortcuts in our computer so it is easier to run the new programs.
 
 {% include codeHeader.html %}
 ```bash
@@ -250,23 +251,23 @@ We use the `nohup` command on this script also, because it can take up to 1 hour
 
 ## Navigating to Athena
 
-1) Use the search bar at the top of the console page to search for **Athena** and click on the first result
+2.1) Use the search bar at the top of the console page to search for **Athena** and click on the first result
 
 ![img11](doc_images/img11.jpg){:width="60%"}
 
 &nbsp;
 
-2) If you are prompted to visit the new Athena console experience, do it. We want to use the latest and greatest!
+2.2) If you are prompted to visit the new Athena console experience, do it. We want to use the latest and greatest!
 
 &nbsp;
 
 ![img12](doc_images/img12.jpg)
 
-3) To make sure Athena saves our search results in the correct S3 bucket, we need to tell it which one to use. Good thing we just made one, eh?  Click **Settings** in the top left of the screen
+2.3) To make sure Athena saves our search results in the correct S3 bucket, we need to tell it which one to use. Good thing we just made one, eh?  Click **Settings** in the top left of the screen
 
 ![img13](doc_images/img13.jpg){:width="60%"}
 
-4) Click the **Manage** button on the right *(1st image)* then **Browse S3** on the next page *(2nd image)* to see the list of S3 buckets in our account. Scroll to find your S3 bucket then click the radio button to the left of the name and click **Choose** in the bottom right *(3rd image)*. Finally, click **Save** *(4th image)*.
+2.4) Click the **Manage** button on the right *(1st image)* then **Browse S3** on the next page *(2nd image)* to see the list of S3 buckets in our account. Scroll to find your S3 bucket then click the radio button to the left of the name and click **Choose** in the bottom right *(3rd image)*. Finally, click **Save** *(4th image)*.
 
 ![img14](doc_images/img14.jpg){:width="40%"}
 
@@ -284,11 +285,11 @@ Now that we can save Athena results we can run some searches! The very last step
 
 These steps aren't necessary to do before every Athena query, but they are useful when exploring a new table.
 
-1) Navigate back to the **Editor** tab and click the dropdown menu underneath the **Database** section and click **sra** to set it as the active database. If you do not see this as an option, refresh the page and check again.
+2.5) Navigate back to the **Editor** tab and click the dropdown menu underneath the **Database** section and click **sra** to set it as the active database. If you do not see this as an option, refresh the page and check again.
 
 ![img17](doc_images/img17.jpg){:width="80%"}
 
-2) Look at the **Tables** section and click the ellipses next to the **metadata** table, then click **Preview Table** to automatically run a sample command which will give you 10 random lines from the table
+2.6) Look at the **Tables** section and click the ellipses next to the **metadata** table, then click **Preview Table** to automatically run a sample command which will give you 10 random lines from the table
 
 ![img18](doc_images/img18.jpg){:width="80%"}
 
@@ -300,19 +301,19 @@ These steps aren't necessary to do before every Athena query, but they are usefu
 
 Obviously we already know what accession we need for the analysis, but what else can we learn about our sequence?
 
-1) Now the accession we gave to our consensus sequence analysis was **SRR15943386**, but we don't know exactly which column that is associated with. So, scroll through the preview table we made earlier to find a column filled with similar values.
+2.7) Now the accession we gave to our consensus sequence analysis was **SRR15943386**, but we don't know exactly which column that is associated with. So, scroll through the preview table we made earlier to find a column filled with similar values.
 
 ![img20](doc_images/img20.jpg){:width="60%"}
 
 > The **Preview Table** query we used to make this example pulls random lines from the table, so the values within your table may look different from this screenshot. The important info for us is that each value in this **acc** column starts with **"SRR" (or "ERR" or "DRR")**
 
-3) Now that we know which column to query for our data (acc), we can build the Athena query. Look to the panel where we enter our Athena queries. Click **New Query 1** to navigate back to the empty panel so we can write our own query.
+2.8) Now that we know which column to query for our data (acc), we can build the Athena query. Look to the panel where we enter our Athena queries. Click **New Query 1** to navigate back to the empty panel so we can write our own query.
 
 ![img21](doc_images/img21.jpg){:width="60%"}
 
 > Fun fact: If you navigate back to **Query 1** you should still see the result table for that query! Athena will save that view for you until you run a new query in that tab or close the webpage.
 
-4) Copy/paste the following command into the query box in Athena _(circled in yellow)_, then click the blue **Run Query** button _(circled in red)_.
+2.9) Copy/paste the following command into the query box in Athena _(circled in yellow)_, then click the blue **Run Query** button _(circled in red)_.
 
 {% include codeHeader.html %}
 ```
@@ -323,11 +324,11 @@ WHERE acc = 'SRR15943386'
 
 ![img22](doc_images/img22.jpg){:width="50%"}
 
-5) If you see a results table with one row like the partial screenshot below, you have successfully found your data!
+2.10) If you see a results table with one row like the partial screenshot below, you have successfully found your data!
 
 ![img23](doc_images/img23.jpg){:width="80%"}
 
-6) Click the **Download results** button on the top-right corner of the results panel to download your file to your computer in CSV format. You should be able to open this in Microsoft Excel, Google Sheets, or a regular text editor (e.g., Notepad for PC, TextEdit for Mac).
+2.11) Click the **Download results** button on the top-right corner of the results panel to download your file to your computer in CSV format. You should be able to open this in Microsoft Excel, Google Sheets, or a regular text editor (e.g., Notepad for PC, TextEdit for Mac).
 
 ![img24](doc_images/img24.jpg){:width="80%"}
 
@@ -345,7 +346,7 @@ To know if the script has finished, we need to check two things.
  - The script has completed running
  - The file we need is available (sequence_alignment.aln)
 
-The script itself is designed to tell us when it is complete. In the log file `nohup.out` there should be a line that says "The script is done running! I hope this worked!". We can look for this line to check if the script is complete. 
+The script itself is designed to tell us when it is complete. In the log file `nohup.out` there should be a line that says `"The script is done running! I hope this worked!"`. We can look for this line to check if the script is complete. 
 
 3.2) Run the following command to pull the last line from the log file and see if our program completed:
 
@@ -356,7 +357,14 @@ tail -n 1 nohup.out
 
 ![imgv2](doc_images/imgv2.jpg){:width="60%"}
 
-3.3) Next, to see if our alignment file was created, type `ls -l` to get a list of files on the EC2 instance. Look through that list for `sequence_alignment.aln` to know if we got the final file we want (the screenshot below is truncated, you will have more files)
+3.3) Next, to see if our alignment file was created, type
+
+{% include codeHeader.html %}
+```bash
+ls -l
+```
+
+to get a list of files on the EC2 instance. Look through that list for `sequence_alignment.aln` to know if we got the final file we want (the screenshot below is truncated, you will have more files)
 
 ![imgv3](doc_images/imgv3.jpg){:width="60%"}
 
@@ -465,11 +473,12 @@ This concludes our exercise on navigating the AWS Cloud computing console and se
 
 ## From Introductory to Intermediate and beyond
 
-The examples you have done today are a very small and glimpse into how you can move your traditional research into the cloud. Unfortunately, 3 hours is hardly enough time to demonstrate the _power_ of the cloud and how it can _improve_ your workflows! So how can the cloud improve what we did today? Here are some examples that you can think about for this case study:
+The examples you have done today are a very small glimpse into how you can move your traditional research into the cloud. Unfortunately, 3 hours is hardly enough time to demonstrate the _power_ of the cloud and how it can _improve_ your workflows! So how can the cloud improve what we did today? Here are some examples that you can think about for this case study:
 
 - **AWS Batch** offers the ability to easily distribute and coordiante analyses over multiple EC2 instances. Repeating this workshop over multiple genomes can easily be managed with minimal extra compute time by letting AWS Batch manage this work
 - **AWS CLI** can manage more than just an S3 bucket like we did today. It can also customize almost any cloud tool in the AWS platform. Imagine writing a script that could do our Athena searches, build our S3 buckets, and even design our EC2 instances.
 - **AWS Lambda** provides an easy way to trigger code without _any_ managing of hardware (imagine skipping the setup of the EC2 instance). This can be useful for automating the start/stop of a piece of code in real-time. For example, our analysis pipeline could be triggered to start every time a new set of sequence read data is uploaded to our S3 bucket, making the entire process 100% automatic.
+- **Samtools/BCFtools** can do a lot of the work we did in Sequence Viewer programatically. It can extract a list of mutations from our consensus sequence and, depending on your needs afterwards, pipe that data into your next program. Combining this programatic analysis with the AWS products above can create a very powerful way to track emerging variations in your viral population ([maybe like what we are doing here at NCBI?](https://www.ncbi.nlm.nih.gov/sra/docs/sars-cov-2-variant-calling/))
 
 ## Useful URLs
 
@@ -508,7 +517,7 @@ The examples you have done today are a very small and glimpse into how you can m
 
 ## Instructions for AWS Glue
 
-In order search through a table (like the SRA metadata table) you need to load it into Athena. Because this is your first-time accessing Athena, it shouldn't be a surprise that you don't currently have any data tables loaded! Therefore, our first step will be to add the SRA metadata table to Athena. There are three ways you can add a table to Athena:
+In order search through a table (like the SRA metadata table) you need to load it into Athena. If this is your first-time accessing Athena, you won't have any data tables loaded! Therefore, your first step should be to add a table to Athena. There are three ways you can add a table to Athena:
 
 1.	Create the table using SQL commands (we are not SQL experts here...yet, so we won't do it this way)
 
@@ -518,7 +527,7 @@ In order search through a table (like the SRA metadata table) you need to load i
 
 > **Note:** Although AWS Glue is the most convenient method, it is also the only one to cost money. To parse the SRA metadata table it will be... ~$0.01.
 
-This section will walk through the steps taken during the AWS Glue demo to prepare the SRA metadata table for Athena queries
+This section will walk through the steps taken during the AWS Glue demo to prepare the SRA metadata table for Athena queries.
 
 1) To start working with AWS Glue, navigate to the **Tables** section of the Athena page on the left-hand side, then click **Create Table** and select **from AWS Glue Crawler** as seen below. If you see a pop-up about the crawler, just click **Continue**.
 
