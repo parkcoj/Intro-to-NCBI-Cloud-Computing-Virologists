@@ -39,3 +39,5 @@ samtools mpileup -aa -d 0 -A -Q 0 -X data/$1.bam data/$1.bam.bai | ivar consensu
 echo "####### GENERATING SEQUENCE ALIGNMENT USING MAFFT #######"
 cat data/$1.fa NC_045512.fa > concat_seqs.fa
 mafft --thread 2 concat_seqs.fa > sequence_alignment.aln
+
+echo "The script is done running! I hope this worked!"
