@@ -163,7 +163,9 @@ One of the most common uses of the cloud is simply renting some computer space f
 > **NOTE:** There are several states this column can have. `2/2 checks passed` is the final status. So, if you see anything else in the **Status Check** column, the instance is not ready to go.
 
 ![img46](doc_images/img46.jpg)
- 
+
+## Installing Software
+
 1.19) Check the box to the left of your instance name _(top image)_ to select the instance, then click **Connect** in the top right to head to the instance launcher _(bottom image)_
 
 ![img47](doc_images/img47.jpg){:width="70%"}
@@ -173,8 +175,6 @@ One of the most common uses of the cloud is simply renting some computer space f
 1.20) On the launcher page, click **Connect** in the bottom right. This will launch a new tab in your browser and connect you to your remote computer!
 
 ![img49](doc_images/img49.jpg){:width="60%"}
-
-## Installing Software
 
 Before we can do our analyses, we need to install the required software into our the instance. There are many programs necessary to make today's exercise work. So rather than typing all of that code out ourselves I have prepared a script that we will use to install the programs for us.
 
@@ -463,7 +463,7 @@ which gives us **23,063 bases**. Let's use this to jump to the correct position 
 
 ![codon_table](doc_images/codon_table.jpg){:width="60%"}
 
-4.13) It looks like we have indeed spotted a `N501Y` mutation in our sequence. Well done! We should have enough evidence to report back to our supervisor and take next steps to prepare for this new variant.
+4.13) It looks like we have indeed spotted a `N501Y` mutation in our sequence. Well done! You can see how visualizing this alignment allowed us to rapidly identify points of variation between our strain and the Wuhan one, but we took it a step further to investigate a specific variant as well to confirm that it matched our expectations. 
 
 ---
 
